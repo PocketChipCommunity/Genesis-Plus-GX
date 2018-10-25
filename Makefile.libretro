@@ -68,6 +68,16 @@ ifneq (,$(findstring unix,$(platform)))
       endif
    endif
 
+else ifeq ($(platform), pocketchip)
+   TARGET := $(TARGET_NAME)_libretro.so
+   fpic := -fPIC
+   SHARED := -shared -Wl,--version-script=$(CORE_DIR)/libretro/link.T -Wl,--no-undefined
+   ENDIANNESS_DEFINES := -DLSB_FIRST -DBYTE_ORDER=LITTLE_ENDIAN
+   ENDIANNESS_DEFINES += -DALIGN_LONG
+   PLATFORM_DEFINES := -DHAVE_ZLIB
+   CFLAGS += -fomit-frame-pointer -ffast-math
+   PLATFORM_DEFINES += -DARM -marm -mcpu=cortex-a8 -mfpu=neon -mfloat-abi=hard
+
 # Portable Linux
 else ifeq ($(platform), linux-portable)
    TARGET := $(TARGET_NAME)_libretro.so
